@@ -1,0 +1,6 @@
+---
+ - hosts: rgrp1
+   remote_user: ansibleclient
+   become: true
+   tasks:
+     - yum: name=screen state=present

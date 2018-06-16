@@ -1,0 +1,22 @@
+---
+  - hosts: local
+    become: true
+    tasks:
+     - name: Check HTTPD is installed
+       command: httpd -v
+       register: httpd_installed
+       ignore_errors: true
+
+     - name: httpd installed
+       debug: msg='httpd is installed'
+       when: httpd_installed|success
+
+     - name: httpd not installed
+       debug: msg='httpd is not installed'
+       when: httpd_installed|failed  
+
+     - name: install httpd
+       yum: name=httpd
+
+     - name: start httpd service
+       service: name=httpd state=started

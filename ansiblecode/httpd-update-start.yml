@@ -1,0 +1,28 @@
+---
+ - hosts: local
+   become: true
+   tasks:
+     - name: Install httpd
+       yum: name=httpd state=present
+       register: httpd_install
+
+     - name: httpd installation validation
+       command: ls -al /sbin/httpd
+       register: httpd_status
+
+     - name: httpd service start if not started
+       service: name=httpd state=started enabled=yes
+       register: http_service
+       when: httpd_install|success and httpd_status|success
+
+     - name: update httpd conf
+       lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="^Listen" insertafter="^#Listen " line=Listen 8080"
+       when: http_service|success
+       notify:
+         - Restart httpd
+       tags:
+         - http update
+
+   handlers:
+     - name: Restart httpd
+       service: name:httpd state=restarted  

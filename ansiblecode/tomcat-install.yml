@@ -1,0 +1,17 @@
+---
+  - hosts: local
+    vars:
+     http_port: 8090
+     admin_user: admin
+     admin_password: admin
+
+    tasks:
+     - name: Install Java 1.7
+       yum: name=java-1.7.0-openjdk state=present
+
+     - name: add group "tomcat"
+       group: name=tomcat
+
+     - name: add user "tomcat"
+       user: name=tomcat group=tomcat home=/usr/share/tomcat createhome=no
+

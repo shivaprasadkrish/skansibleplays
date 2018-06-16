@@ -1,0 +1,16 @@
+---
+ - hosts: local
+   become: true
+   vars_prompt:
+     - name: "user_name"
+       prompt: "Enter the username:"
+
+     - name: "user_password"
+       prompt: "Enter Password:"
+       private: yes
+       encrypt: "md5_crypt"
+       confirm: yes
+
+   tasks:
+     - name: Creating User
+       user: name={{ user_name }} password={{ user_password }} shell=/bin/bash state=present

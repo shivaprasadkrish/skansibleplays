@@ -1,0 +1,28 @@
+---
+  - hosts: local
+    gather_facts: False
+    become: true
+  
+    vars_prompt:
+      - name: username1
+        prompt: "Enter the desired username"
+
+      - name: pswd1
+        prompt: "Enter the new password"
+
+    tasks:
+      - name: create a new group
+        group: name=testgrp1 state=present
+        tags:
+          - groupcreate
+
+      - name: Print Username
+        debug:
+          msg: "{{ username1 }}"
+          
+      - name: Add user to the new group
+        user:
+          name: "{{ username1 }}"
+          password: "{{ pswd1 }}"
+          group: testgrp1
+        
